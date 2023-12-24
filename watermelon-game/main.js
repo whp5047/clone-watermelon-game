@@ -1,4 +1,4 @@
-import { Bodies, Engine, Render, Runner, World, Body } from "matter-js";
+import { Bodies, Engine, Render, Runner, World, Body, Events } from "matter-js";
 import { FRUITS } from "./fruits";
 
 const engine = Engine.create();
@@ -111,5 +111,31 @@ window.onkeydown = (keyDown) => {
       break;    
   }
 }
+
+Events.on(engine, 'collisionActive', (event) => {
+  event.pairs.forEach((collision) => {
+    if(collision.bodyA?.index === collision.bodyB?.index ){
+      const index = collision.bodyA.index;
+      if( index === FRUITS.length - 1 ) return;
+      World.remove(world, [collision.bodyA, collision.bodyB]);
+
+      const newItem = FRUITS[index + 1];
+      const newBody = Bodies.circle(
+        collision.collision.supports[0].x,
+        collision.collision.supports[0].y,
+        newItem.radius,
+        { 
+          render : { 
+            sprite: { texture: `${newItem.name}.png`} 
+          },
+          index : index + 1
+        }
+      );
+
+      World.add(world, newBody);
+    }
+
+  })
+})
 
 makeFruits();
