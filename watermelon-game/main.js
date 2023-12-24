@@ -45,6 +45,7 @@ let currentBody = null;
 let currentFruit = null;
 let disableOption = false;
 let interval = null;
+let num_waterMelon = 0;
 
 function makeFruits() {
   const index = Math.floor(Math.random() * 5);
@@ -64,7 +65,6 @@ function makeFruits() {
 
   World.add(world, body);
 }
-
 
 window.onkeyup = (keyUp) =>{
   switch (keyUp.code) {
@@ -133,8 +133,17 @@ Events.on(engine, 'collisionActive', (event) => {
       );
 
       World.add(world, newBody);
+      
+      if(index + 1 === FRUITS.length - 1) num_waterMelon++;
+      setTimeout(()=>{
+        if(num_waterMelon === 2)alert('You Win');
+      }, 1300);
     }
-
+  
+    if( !disableOption && [collision.bodyA.name, collision.bodyB.name].includes('topLine') ){
+      location.reload();
+      alert('Game Over')
+    }
   })
 })
 
