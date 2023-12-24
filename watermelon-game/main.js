@@ -1,4 +1,4 @@
-import { Bodies, Engine, Render, Runner, World,} from "matter-js";
+import { Bodies, Engine, Render, Runner, World, Body } from "matter-js";
 import { FRUITS } from "./fruits";
 
 const engine = Engine.create();
@@ -43,6 +43,8 @@ Runner.run(engine);
 
 let currentBody = null;
 let currentFruit = null;
+let disableOption = false;
+let interval = null;
 
 function makeFruits() {
   const index = Math.floor(Math.random() * 5);
@@ -61,6 +63,53 @@ function makeFruits() {
   currentFruit = item;
 
   World.add(world, body);
+}
+
+
+window.onkeyup = (keyUp) =>{
+  switch (keyUp.code) {
+    case 'KeyA':
+    case 'KeyD':
+      clearInterval(interval);
+      interval = null;
+  }
+}
+
+window.onkeydown = (keyDown) => {
+  if(disableOption) return;
+
+  switch(keyDown.code){
+    case 'KeyA':
+      if(interval) return;
+      interval = setInterval( () => {
+        if( currentBody.position.x - currentFruit.radius > 32)
+        Body.setPosition(currentBody,{
+          x: currentBody.position.x - 1,
+          y: currentBody.position.y
+        })
+      }, 5);
+        
+      break;
+    case 'KeyD':
+      if(interval) return;
+      interval = setInterval( () => {
+        if( currentBody.position.x + currentFruit.radius < 588){}
+        Body.setPosition(currentBody,{
+          x: currentBody.position.x + 1,
+          y: currentBody.position.y
+        })
+      }, 5);
+    
+      break;
+    case 'KeyS':
+      currentBody.isSleeping = false;
+      disableOption = true;
+      setTimeout( ()=> {
+        makeFruits();
+        disableOption = false
+      }, 1000); 
+      break;    
+  }
 }
 
 makeFruits();
