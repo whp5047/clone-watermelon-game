@@ -93,7 +93,7 @@ window.onkeydown = (keyDown) => {
     case 'KeyD':
       if(interval) return;
       interval = setInterval( () => {
-        if( currentBody.position.x + currentFruit.radius < 588){}
+        if( currentBody.position.x + currentFruit.radius < 588)
         Body.setPosition(currentBody,{
           x: currentBody.position.x + 1,
           y: currentBody.position.y
