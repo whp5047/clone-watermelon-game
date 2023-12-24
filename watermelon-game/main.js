@@ -1,4 +1,5 @@
 import { Bodies, Engine, Render, Runner, World,} from "matter-js";
+import { FRUITS } from "./fruits";
 
 const engine = Engine.create();
 const render = Render.create({
@@ -40,3 +41,26 @@ World.add(world, [leftWall, rightWall, ground, topLine]);
 Render.run(render);
 Runner.run(engine);
 
+let currentBody = null;
+let currentFruit = null;
+
+function makeFruits() {
+  const index = Math.floor(Math.random() * 5);
+  const item = FRUITS[index];
+
+  const body = Bodies.circle(300, 50, item.radius, {
+    index: index,
+    isSleeping :true,
+    render: {
+      sprite: { texture: `${item.name}.png` }
+    },
+    restitution : 0.2,
+  })
+
+  currentBody = body;
+  currentFruit = item;
+
+  World.add(world, body);
+}
+
+makeFruits();
